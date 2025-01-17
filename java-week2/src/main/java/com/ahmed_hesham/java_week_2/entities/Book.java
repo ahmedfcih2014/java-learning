@@ -2,12 +2,10 @@ package com.ahmed_hesham.java_week_2.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.Builder;
 import lombok.Data;
 
 @Entity
 @Data
-@Builder
 @Table(name = "books")
 public class Book {
     @Id

@@ -5,6 +5,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Data
 @SuperBuilder
@@ -30,6 +35,21 @@ public class ApiResponse<T> {
                 .data(null)
                 .message("Failure: " + e.getMessage())
                 .statusCode(status)
+                .build();
+    }
+
+    public static ApiResponse<Map<String, String>> validation(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        String message = errors.entrySet().iterator().next().getValue();
+        return ApiResponse.<Map<String, String>>builder()
+                .data(errors)
+                .message(message)
+                .statusCode(HttpStatus.UNPROCESSABLE_ENTITY)
                 .build();
     }
 }

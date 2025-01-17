@@ -1,6 +1,5 @@
 package com.ahmed_hesham.java_week_2.responses;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
