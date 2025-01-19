@@ -17,8 +17,16 @@ public class Book {
     private String title;
 
     @Column(nullable = false)
-    @NotEmpty(message = "Author cannot be empty")
-    private String author;
+    @NotEmpty(message = "Price cannot be empty")
+    private Double price;
+
+    @ManyToOne
+    @JoinColumn(name = "author_id", nullable = false)
+    private Author author;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 
     @Column(name = "is_borrowed", nullable = false)
     private boolean isBorrowed = false;

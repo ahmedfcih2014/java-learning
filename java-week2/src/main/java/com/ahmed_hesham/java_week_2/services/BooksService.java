@@ -1,13 +1,19 @@
 package com.ahmed_hesham.java_week_2.services;
 
 import com.ahmed_hesham.java_week_2.dtos.BookDto;
+import com.ahmed_hesham.java_week_2.entities.Author;
 import com.ahmed_hesham.java_week_2.entities.Book;
+import com.ahmed_hesham.java_week_2.entities.Category;
 import com.ahmed_hesham.java_week_2.exceptions.BusinessException;
+import com.ahmed_hesham.java_week_2.repositories.AuthorRepository;
 import com.ahmed_hesham.java_week_2.repositories.BookRepository;
-import com.ahmed_hesham.java_week_2.responses.BookResponse;
+import com.ahmed_hesham.java_week_2.repositories.CategoryRepository;
 import com.ahmed_hesham.java_week_2.responses.MessageResponse;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,17 +23,35 @@ import java.util.Optional;
 public class BooksService {
     @Autowired
     private BookRepository repository;
+    private AuthorRepository authorRepository;
+    private CategoryRepository categoryRepository;
 
     public List<Book> allBooks() {
         return repository.findAll();
     }
 
-    public BookResponse addBook(BookDto dto) {
+    public List<Book> booksByCategory(String categoryName) {
+        return repository.findByCategoryTitle(categoryName);
+    }
+
+    public Page<Book> booksPaginated(int page, int size) {
+        return repository.findAll(PageRequest.of(page, size));
+    }
+
+    public MessageResponse addBook(BookDto dto) throws ValidationException {
+        Optional<Author> author = authorRepository.findById(dto.getAuthorId());
+        if(author.isEmpty()) throw new ValidationException("Author not found");
+
+        Optional<Category> category = categoryRepository.findById(dto.getCategoryId());
+        if(category.isEmpty()) throw new ValidationException("Category not found");
+
         Book b = new Book();
         b.setTitle(dto.getTitle());
-        b.setAuthor(dto.getAuthor());
+        b.setPrice(dto.getPrice());
+        b.setAuthor(author.get());
+        b.setCategory(category.get());
         repository.save(b);
-        return BookResponse.builder().id(b.getId()).title(b.getTitle()).author(b.getAuthor()).build();
+        return MessageResponse.builder().message("%s created".formatted(dto.getTitle())).build();
     }
 
     public MessageResponse borrowBook(Long id) {

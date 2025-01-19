@@ -3,11 +3,11 @@ package com.ahmed_hesham.java_week_2.controllers;
 import com.ahmed_hesham.java_week_2.dtos.BookDto;
 import com.ahmed_hesham.java_week_2.entities.Book;
 import com.ahmed_hesham.java_week_2.responses.ApiResponse;
-import com.ahmed_hesham.java_week_2.responses.BookResponse;
 import com.ahmed_hesham.java_week_2.responses.MessageResponse;
 import com.ahmed_hesham.java_week_2.services.BooksService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,10 +24,20 @@ public class BooksController {
     }
 
     @PostMapping()
-    public ApiResponse<BookResponse> addBook(
+    public ApiResponse<MessageResponse> addBook(
             @RequestBody @Valid BookDto dto
-    ) throws Exception {
+    ) {
         return ApiResponse.ok(service.addBook(dto));
+    }
+
+    @GetMapping("/search")
+    public List<Book> getBooksByCategory(@RequestParam String categoryName) {
+        return service.booksByCategory(categoryName);
+    }
+
+    @GetMapping("/paginate")
+    public Page<Book> getBooksPaginated(@RequestParam int page, @RequestParam int size) {
+        return service.booksPaginated(page, size);
     }
 
     @PutMapping("/{id}/borrow")
