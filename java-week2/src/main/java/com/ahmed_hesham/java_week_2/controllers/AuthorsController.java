@@ -7,7 +7,6 @@ import com.ahmed_hesham.java_week_2.responses.ApiResponse;
 import com.ahmed_hesham.java_week_2.services.AuthorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
