@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
-    @Query(value = "SELECT * FROM categories", nativeQuery = true)
+    @Query("SELECT new Category(c.id, c.title) FROM Category c")
     List<Category> findAllWithoutBooks();
 }

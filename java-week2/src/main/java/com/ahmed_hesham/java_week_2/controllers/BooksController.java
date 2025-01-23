@@ -1,6 +1,7 @@
 package com.ahmed_hesham.java_week_2.controllers;
 
 import com.ahmed_hesham.java_week_2.dtos.BookDto;
+import com.ahmed_hesham.java_week_2.dtos.BookResponseDto;
 import com.ahmed_hesham.java_week_2.entities.Book;
 import com.ahmed_hesham.java_week_2.responses.ApiResponse;
 import com.ahmed_hesham.java_week_2.responses.MessageResponse;
@@ -19,7 +20,7 @@ public class BooksController {
     private BooksService service;
 
     @GetMapping()
-    public ApiResponse<List<Book>> allBooks() {
+    public ApiResponse<List<BookResponseDto>> allBooks() {
         return ApiResponse.ok(service.allBooks());
     }
 

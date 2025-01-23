@@ -14,7 +14,6 @@ public class BookDto {
     )
     private String title;
 
-    @NotEmpty(message = "price cannot be empty")
     private Double price;
 
     private Long authorId;

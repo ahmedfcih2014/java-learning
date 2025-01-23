@@ -17,5 +17,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Query("SELECT b FROM Book b WHERE b.author.name = :authorName")
     List<Book> findBooksByAuthor(@Param("authorName") String authorName);
 
+    @Query(value = "SELECT DISTINCT b FROM Book b JOIN FETCH b.author JOIN FETCH b.category",
+            countQuery = "SELECT COUNT(b) FROM Book b")
     Page<Book> findAll(Pageable pageable);
 }

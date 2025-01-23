@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface AuthorRepository extends JpaRepository<Author, Long> {
-    @Query(value = "SELECT * FROM authors", nativeQuery = true)
+    @Query("SELECT new Author(c.id, c.name) FROM Author c")
     List<Author> findAllWithoutBooks();
 }

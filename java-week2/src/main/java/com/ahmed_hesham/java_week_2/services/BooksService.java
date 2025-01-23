@@ -1,6 +1,7 @@
 package com.ahmed_hesham.java_week_2.services;
 
 import com.ahmed_hesham.java_week_2.dtos.BookDto;
+import com.ahmed_hesham.java_week_2.dtos.BookResponseDto;
 import com.ahmed_hesham.java_week_2.entities.Author;
 import com.ahmed_hesham.java_week_2.entities.Book;
 import com.ahmed_hesham.java_week_2.entities.Category;
@@ -11,6 +12,8 @@ import com.ahmed_hesham.java_week_2.repositories.CategoryRepository;
 import com.ahmed_hesham.java_week_2.responses.MessageResponse;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,15 +22,24 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class BooksService {
-    @Autowired
-    private BookRepository repository;
-    private AuthorRepository authorRepository;
-    private CategoryRepository categoryRepository;
+    private final BookRepository repository;
+    private final AuthorRepository authorRepository;
+    private final CategoryRepository categoryRepository;
 
-    public List<Book> allBooks() {
-        return repository.findAll();
+    public List<BookResponseDto> allBooks() {
+        return repository.findAll().stream().map(b -> {
+            return BookResponseDto.builder()
+                    .id(b.getId())
+                    .title(b.getTitle())
+                    .price(b.getPrice())
+                    .isBorrowed(b.isBorrowed())
+                    .categoryTitle(b.getCategory().getTitle())
+                    .authorName(b.getAuthor().getName())
+                    .build();
+        }).toList();
     }
 
     public List<Book> booksByCategory(String categoryName) {
